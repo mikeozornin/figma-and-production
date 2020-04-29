@@ -8,16 +8,13 @@ const colorRowHeight: number = 80;
 const names: string[] = Object.keys(data);
 
 export default async () => {
-    await figma.loadFontAsync({ family: 'Roboto', style: 'Regular' });
+    await figma.loadFontAsync({family: 'Roboto', style: 'Regular'});
 
     // Delete an old frame
     const currentFrame: SceneNode | null = figma.currentPage.findOne(n => {
         return n.name === artboardName;
     });
     currentFrame && !currentFrame.removed && currentFrame.remove();
-
-    // Delete old styles
-    deletePaintStyles();
 
     // Create a new frame
     const frame: FrameNode = figma.createFrame();
@@ -38,8 +35,17 @@ export default async () => {
         // Create a style
         const hexColor = data[name];
         const color = hexRgb(hexColor);
-        const style: PaintStyle = figma.createPaintStyle();
-        style.name = name;
+
+        let presentStyles = figma.getLocalPaintStyles().filter(item => item.type === 'PAINT').filter(style => style.name === name);
+
+        let style: PaintStyle;
+        if (presentStyles.length > 0) {
+            style = presentStyles[0];
+        } else {
+            style = figma.createPaintStyle();
+            style.name = name;
+        }
+        console.log('1 ', name);
         style.paints = [
             {
                 type: 'SOLID',

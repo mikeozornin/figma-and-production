@@ -2,7 +2,7 @@ import syncIcons from './sync-icons';
 import syncColors from './sync-colors';
 
 const run = async (): Promise<void> => {
-    syncIcons();
+    // syncIcons();
     await syncColors();
     figma.closePlugin('Synced!');
 };
